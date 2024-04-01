@@ -1,0 +1,8 @@
+.chart-container {
+    position: relative;
+    width: 100%;
+}
+
+.display {
+    background-color: black;
+}
