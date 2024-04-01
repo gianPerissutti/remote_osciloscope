@@ -1,27 +1,25 @@
 import {useRef,useEffect, useState} from 'react'
 import Chart from 'chart.js/auto';
 import 'chartjs-plugin-style'
-
+import _ from 'lodash'
 
 const Display = ({lastSignalValue,timeDiv,amplitudeDiv}) => {
-
+    
     //Initial variables
-    const [timeDivDisplay, setTimeDivDisplay] = useState(0.0001);
-    const [ampDivDisplay,setAmpDivDisplay] = useState(5)
-
+ 
     //const t = JSON.parse(window.localStorage.getItem('t'))
     //Vamos a hacer 4 divisiones de prueba
     // 1 ms , 500ms, 1 s, 5 s
     const maxValue = 1
     const sampleFrec = 10000
-  
-    
     const separation = 1/sampleFrec;
     const t = _.range(0, maxValue*10, separation).map(t => (t.toFixed(6)));
     const chartRef = useRef(null);
     const [displayData, setDisplayData] = useState();
+    const [timeDivDisplay, setTimeDivDisplay] = useState(0.0001);
+    const [ampDivDisplay,setAmpDivDisplay] = useState(5)
 
-    useEffect(() => {
+    useEffect(() => {   
     setDisplayData(lastSignalValue) 
     }, [lastSignalValue])   
     
@@ -30,7 +28,12 @@ const Display = ({lastSignalValue,timeDiv,amplitudeDiv}) => {
         setTimeDivDisplay(timeDiv)
     },[timeDiv])
 
-    
+        
+    useEffect(() => {
+        setAmpDivDisplay(amplitudeDiv)
+     }, [amplitudeDiv])
+        
+
     const data = { 
         labels:t,
         datasets: [{
@@ -87,15 +90,15 @@ const Display = ({lastSignalValue,timeDiv,amplitudeDiv}) => {
                 },
                 
                 y: {
-                    min:-5,
-                    max:5,
+                    min:-ampDivDisplay,
+                    max:ampDivDisplay,
                     title: {
-                        display: true,
+                        display: true,      
                         text: 'Voltage (V)' // Y-axis label
                     },
                     
-                    suggestedMin: -amplitude, // Minimum value on the y-axis
-                    suggestedMax: amplitude,    
+                    suggestedMin: -ampDivDisplay, // Minimum value on the y-axis
+                    suggestedMax: ampDivDisplay,    
                     grid:{
                         
                         color: 'gray', 
