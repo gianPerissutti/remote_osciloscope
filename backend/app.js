@@ -12,7 +12,7 @@ const middleware = require('./utils/middleware');
 
 app.use(cors());
 app.use(express.json());
-console.log("aqui estoy");
+
 
 const server = http.createServer(app); // Create HTTP server
 const wss = new WebSocket.Server({ server }); // Create WebSocket server
@@ -40,7 +40,7 @@ wss.on('connection', (ws) => {
     buffer1seg.enq(randomVal);
     buffer1seg.enq(randomVal);
     webSocketBuffer.set(buffer1seg.toarray())
-    ws.send(webSocketBuffer);
+   ws.send(webSocketBuffer);
   
 },10)
  

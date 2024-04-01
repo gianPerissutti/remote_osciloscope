@@ -6,3 +6,9 @@
 .display {
     background-color: black;
 }
+
+.config_button {
+    display: flex;
+    justify-content: flex-end;
+}
+

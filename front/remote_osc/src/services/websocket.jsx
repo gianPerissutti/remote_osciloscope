@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 const WebSocketComponent = ({ setReturnedValue }) => {
   
-  const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket('ws://localhost:3002', {
+  const {lastMessage, readyState, getWebSocket } = useWebSocket('ws://localhost:3002', {
     onOpen: () => console.log('opened'),
     //Will attempt to reconnect on all close events, such as server shutting down
     shouldReconnect: (closeEvent) => true,
@@ -16,7 +16,6 @@ const WebSocketComponent = ({ setReturnedValue }) => {
     getWebSocket().binaryType = "arraybuffer"
     getWebSocket().onmessage = (event) => {
     let bufferArrived = new Float32Array(event.data)
-    console.log("el valor es",bufferArrived)
     setReturnedValue(bufferArrived)
     }
     }

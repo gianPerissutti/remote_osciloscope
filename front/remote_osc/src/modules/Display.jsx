@@ -1,31 +1,36 @@
 import {useRef,useEffect, useState} from 'react'
 import Chart from 'chart.js/auto';
-import _, { set } from 'lodash'
 import 'chartjs-plugin-style'
-import CircularBuffer from 'circular-buffer'
 
 
+const Display = ({lastSignalValue,timeDiv,amplitudeDiv}) => {
 
-
-
-const Display = ({lastSignalValue}) => {
     //Initial variables
- 
+    const [timeDivDisplay, setTimeDivDisplay] = useState(0.0001);
+    const [ampDivDisplay,setAmpDivDisplay] = useState(5)
+
     //const t = JSON.parse(window.localStorage.getItem('t'))
     //Vamos a hacer 4 divisiones de prueba
     // 1 ms , 500ms, 1 s, 5 s
     const maxValue = 1
-    const sampleFrec = 100000
-    const timeDiv = 0.001
-    const amplitude= 5
+    const sampleFrec = 10000
+  
+    
     const separation = 1/sampleFrec;
     const t = _.range(0, maxValue*10, separation).map(t => (t.toFixed(6)));
     const chartRef = useRef(null);
     const [displayData, setDisplayData] = useState();
+
     useEffect(() => {
     setDisplayData(lastSignalValue) 
     }, [lastSignalValue])   
- 
+    
+    useEffect(()=>
+    {
+        setTimeDivDisplay(timeDiv)
+    },[timeDiv])
+
+    
     const data = { 
         labels:t,
         datasets: [{
@@ -66,13 +71,13 @@ const Display = ({lastSignalValue}) => {
                       
                         sampleSize:t,
                         autoSkip: false,
-                        stepSize: timeDiv,
+                        stepSize: timeDivDisplay,
                         maxTicksLimit:10,
                         callback: function(value, index, ticks) {
                             // Return only the tick value
                             if(value%0.4== 0)
                             {
-                                return  'time division:'+ timeDiv +'s'
+                                return  'time division:'+ timeDivDisplay +'s'
                             }
                             else{
                                 return ''
@@ -130,8 +135,7 @@ const Display = ({lastSignalValue}) => {
         }, [data, options]);
 
         return (
-            <div>
-                <h2>Osciloscopio Web</h2>
+            <div>   
                 <canvas ref={chartRef}></canvas>
             </div>
         );
