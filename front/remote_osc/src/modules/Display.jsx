@@ -2,15 +2,13 @@
 import { useRef, useEffect, useState } from "react";
 import "chartjs-plugin-style";
 import Plotly from "plotly.js-dist";
-import range from "lodash";
+import range from "lodash/range";
 
 // eslint-disable-next-line react/prop-types
 const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
-  const maxValue = 1;
-  const sampleFrec = 10000;
-  const separation = 1 / sampleFrec;
-  const t = range(0, maxValue * 10, separation).map((t) => t.toFixed(6));
 
+
+  const sampleFrec = 10000;
   const [displayData, setDisplayData] = useState([]);
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.0001);
   const [ampDivDisplay, setAmpDivDisplay] = useState(5);
@@ -28,6 +26,8 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
   }, [amplitudeDiv]);
 
   let parsedData = [];
+
+  const xVals = range(0, 1, 1 / sampleFrec)
   useEffect(() => {
     parsedData = Array.from(displayData);
   }, [displayData]);
@@ -36,10 +36,10 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
 
   useEffect(() => {
     const trace = {
-      x: parsedData.map((_, index) => index), // Use index as x-value
+      x: xVals, // Use index as x-value
       y: parsedData,
       type: "scattergl",
-      mode: "lines",
+      mode: " lines",
       line: {
         color: "rgba(255, 206, 86, 1)",
         width: 2,
@@ -49,11 +49,17 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
     const layout = {
       xaxis: {
         title: "",
-        range: [0, sampleFrec * 10 * timeDiv],
+        range: [0, 10 * timeDivDisplay],
+        tick0: 0,
+        dtick: timeDivDisplay,
+        gridcolor: 'lightgray',
+
       },
       yaxis: {
         title: "Voltage (V)",
         range: [-ampDivDisplay, ampDivDisplay],
+        gridcolor: 'lightgray',
+        dtick: ampDivDisplay / 5,
       },
       margin: { t: 0 },
       paper_bgcolor: "black",
