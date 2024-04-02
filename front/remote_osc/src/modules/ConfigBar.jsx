@@ -6,7 +6,7 @@ import Stack from "react-bootstrap/Stack";
 import "../Disp.css";
 import oscConfigService from "../services/oscConfigService";
 
-function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
+function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -29,7 +29,9 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
     })
   }
 
-
+  const handlePause = () => {
+    setPause(prevPause => !prevPause);
+  }
   return (
     <>
       <Stack direction="horizontal" gap={3} className="bg-dark p-2">
@@ -114,7 +116,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
                 {" "}
                 <Button
                   variant="dark"
-                  onClick={() => {handleNewAmpDiv(0.01*5)}}>
+                  onClick={() => { handleNewAmpDiv(0.01 * 5) }}>
                   1mv
                 </Button>
               </div>
@@ -124,7 +126,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  {handleNewAmpDiv(0.1*5)}
+                  { handleNewAmpDiv(0.1 * 5) }
                 }}
               >
                 100mv
@@ -135,13 +137,17 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  {handleNewAmpDiv(5)}
+                  { handleNewAmpDiv(5) }
                 }}
               >
                 1v
               </Button>
             </div>
           </Stack>
+          <h4>Pause</h4>
+          <Button variant="dark" onClick={handlePause}>
+            Pause
+          </Button>
         </Offcanvas.Body>
       </Offcanvas>
     </>

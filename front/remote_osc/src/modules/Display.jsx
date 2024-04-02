@@ -6,7 +6,7 @@ import range from "lodash/range";
 import oscConfigService from "../services/oscConfigService";
 
 // eslint-disable-next-line react/prop-types
-const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
+const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
 
 
   const sampleFrec = 10000;
@@ -23,6 +23,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
   }, []);
 
   useEffect(() => {
+    
     setDisplayData(lastSignalValue);
   }, [lastSignalValue]);
 
@@ -38,7 +39,9 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
 
 
   useEffect(() => {
-    parsedData = Array.from(displayData);
+   
+      parsedData = Array.from(displayData);
+    
   }, [displayData]);
 
   const plotRef = useRef(null);
@@ -77,7 +80,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
     const config = { responsive: true, staticPlot: true };
 
     Plotly.react(plotRef.current, [trace], layout, config);
-  }, [parsedData]);
+  }, [parsedData,pause]);
 
   return (
     <div
