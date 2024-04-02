@@ -72,7 +72,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
   return (
     <div
       ref={plotRef}
-      style={{ backgroundColor: "black", width: "100%", height: "90vh" }}
+      style={{ backgroundColor: "black", width: "100%", height: "85vh" }}
     />
   );
 };
