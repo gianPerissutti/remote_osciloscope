@@ -5,13 +5,14 @@ const cors = require('cors');
 const http = require('http'); // Import the HTTP module
 const WebSocket = require('ws'); // Import WebSocket library
 const CircularBuffer = require('circular-buffer')
-
+const OscConfigRouter = require('./controllers/oscConfig');
 
 
 const middleware = require('./utils/middleware');
 
 app.use(cors());
 app.use(express.json());
+app.use('/osc_config',OscConfigRouter)
 
 
 const server = http.createServer(app); // Create HTTP server

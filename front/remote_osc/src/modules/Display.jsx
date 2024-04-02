@@ -1,24 +1,31 @@
 import {useRef,useEffect, useState} from 'react'
 import Chart from 'chart.js/auto';
 import 'chartjs-plugin-style'
-import _ from 'lodash'
+import _, { set } from 'lodash'
+import OscConfigService from '../services/osc_config'
+
+
+    
+
 
 const Display = ({lastSignalValue,timeDiv,amplitudeDiv}) => {
-    
+
     //Initial variables
- 
-    //const t = JSON.parse(window.localStorage.getItem('t'))
-    //Vamos a hacer 4 divisiones de prueba
-    // 1 ms , 500ms, 1 s, 5 s
     const maxValue = 1
     const sampleFrec = 10000
     const separation = 1/sampleFrec;
     const t = _.range(0, maxValue*10, separation).map(t => (t.toFixed(6)));
-    const chartRef = useRef(null);
+    
     const [displayData, setDisplayData] = useState();
     const [timeDivDisplay, setTimeDivDisplay] = useState(0.0001);
     const [ampDivDisplay,setAmpDivDisplay] = useState(5)
-
+    let ampFromServer=0
+    let timeFromServer = 0
+    //const t = JSON.parse(window.localStorage.getItem('t'))
+    //Vamos a hacer 4 divisiones de prueba
+    // 1 ms , 500ms, 1 s, 5 s
+  
+    
     useEffect(() => {   
     setDisplayData(lastSignalValue) 
     }, [lastSignalValue])   
@@ -33,6 +40,13 @@ const Display = ({lastSignalValue,timeDiv,amplitudeDiv}) => {
         setAmpDivDisplay(amplitudeDiv)
      }, [amplitudeDiv])
         
+    /* useEffect(() => {
+        OscConfigService.getAll().then(response => {
+            ampFromServer = response.data.timeDiv
+            timeFromServer = response.data.ampDiv
+            
+        })
+        },[])*/
 
     const data = { 
         labels:t,
@@ -115,34 +129,45 @@ const Display = ({lastSignalValue,timeDiv,amplitudeDiv}) => {
 
 
 
-        useEffect(() => {
-            const ctx = chartRef.current?.getContext('2d');
-            let chartInstance = null;
+    const chartRef = useRef(null);
+    const chartInstanceRef = useRef(null);
 
-            if (ctx) {
-            
-                chartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: data,
-                    options: options,
-                    
-                });
+    useEffect(() => {
+        const ctx = chartRef.current?.getContext('2d');
 
+        if (ctx) {
+            // Check if chartInstanceRef.current is already set
+            if (chartInstanceRef.current) {
+                // If it is, destroy the previous instance before creating a new one
+                chartInstanceRef.current.destroy();
             }
 
-            return () => {
-                if (chartInstance !== null) {
-                    chartInstance.destroy();
-                }
-            };
-        }, [data, options]);
+            // Create a new chart instance
+            const newChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options,
+            });
 
-        return (
-            <div>   
-                <canvas ref={chartRef}></canvas>
-            </div>
-        );
+            // Update the chart instance ref
+            chartInstanceRef.current = newChartInstance;
+        }
+
+        // Cleanup function to destroy the chart instance when component unmounts
+        return () => {
+            if (chartInstanceRef.current !== null) {
+                chartInstanceRef.current.destroy();
+            }
+        };
+    }, [data, options]);
+
+    return (
+        <div>
+            <canvas ref={chartRef}></canvas>
+        </div>
+    );
 };
+
 
 export default Display
 

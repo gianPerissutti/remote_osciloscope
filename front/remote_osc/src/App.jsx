@@ -4,13 +4,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import WebSocketComponent from './services/websocket';
 import { useRef, useEffect ,useState} from 'react';
 import ConfigBar from "./modules/ConfigBar.jsx";
+import OscConfigService from './services/osc_config'
+import { set } from "lodash";
 
 const App = () => {
     
     const [signalValue, setSignalValue] = useState(0);
     const [timeDivDisplay,setTimeDivDisplay] =useState(0.001)
     const [ampDivDisplay,setAmpDivDisplay] =useState(5)
-   
+
+  
+      
     return (
         <div>
         <div >
