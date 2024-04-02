@@ -3,8 +3,8 @@ import axios from 'axios';
 const baseUrl = 'http://localhost:3002/osc_config';
 
 const getAll = () => {
-    return axios.get(baseUrl)
-  }
+  return axios.get(baseUrl)
+}
 
 const update = async (id, newObject) => {
   try {
@@ -15,7 +15,7 @@ const update = async (id, newObject) => {
   }
 }
 
-export default { 
-  getAll,   
-  update 
+export default {
+  getAll,
+  update
 };
