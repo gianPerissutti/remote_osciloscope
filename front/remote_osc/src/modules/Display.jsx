@@ -148,19 +148,3 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
 };
 
 export default Display;
-
-/*GENERATE SAMPLE FUNCTION*-/--------------------------------------------------------------------*/
-
-//
-//const voltageValues = t.map(t => (t <= (t.length  )? amplitude * Math.sin(t * frequency * 2 * 3.1419).toFixed(3) : null));
-//window.localStorage.setItem('voltageValues',JSON.stringify(voltageValues))
-//window.localStorage.setItem('t',JSON.stringify(t))
-
-//const t = JSON.parse(window.localStorage.getItem('t'))
-//const voltageValues = JSON.parse(window.localStorage.getItem('voltageValues'))
-
-//const buffer1seg = new Array(sampleFrec*10).fill(0);
-//buffer1seg.splice(0,voltageValues.length,...voltageValues)
-//window.localStorage.setItem('buffer1seg',JSON.stringify(buffer1seg))
-
-//const buffer1seg = JSON.parse(window.localStorage.getItem('buffer1seg'))
