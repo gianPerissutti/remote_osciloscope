@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import "chartjs-plugin-style";
@@ -10,7 +11,6 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
   const sampleFrec = 10000;
   const separation = 1 / sampleFrec;
   const t = range(0, maxValue * 10, separation).map((t) => t.toFixed(6));
-
   const [displayData, setDisplayData] = useState();
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.0001);
   const [ampDivDisplay, setAmpDivDisplay] = useState(5);
@@ -19,16 +19,6 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
   //const t = JSON.parse(window.localStorage.getItem('t'))
   //Vamos a hacer 4 divisiones de prueba
   // 1 ms , 500ms, 1 s, 5 s
-
-  let parsedData = [];
-  if (displayData) {
-    for (let i = 0; i < displayData.length; i++) {
-      parsedData.push({
-        x: i,
-        y: displayData[i],
-      });
-    }
-  }
 
   useEffect(() => {
     setDisplayData(lastSignalValue);
@@ -42,27 +32,10 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
     setAmpDivDisplay(amplitudeDiv);
   }, [amplitudeDiv]);
 
-  const data = {
-    labels: t,
-    datasets: [
-      {
-        label: "Voltage (V)",
-        data: parsedData,
-        borderColor: "rgba(255, 206, 86, 1)", // Yellow color
-        spanGaps: true,
-        borderWidth: 2,
-        pointRadius: 0, // Set pointRadius to 0 to remove circles
-        display: false,
-      },
-    ],
-  };
-
   const options = {
     plugins: {
       decimation: {
         enabled: true,
-        algorithm: "lttb",
-        samples: 1,
       },
     },
     normalized: true,
@@ -70,6 +43,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
     parsing: false,
     scales: {
       x: {
+        type: "linear",
         min: 0,
         max: sampleFrec * 10 * timeDiv,
         grid: {
@@ -92,6 +66,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
       },
 
       y: {
+        type: "linear",
         min: -ampDivDisplay,
         max: ampDivDisplay,
         title: {
@@ -124,7 +99,18 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
       // Create a new chart instance
       const newChartInstance = new Chart(ctx, {
         type: "line",
-        data: data,
+        data: {
+          datasets: [
+            {
+              label: "Voltage (V)",
+              data: [],
+              borderColor: "rgba(255, 206, 86, 1)", // Yellow color
+              spanGaps: true,
+              borderWidth: 2,
+              pointRadius: 0, // Set pointRadius to 0 to remove circles
+            },
+          ],
+        },
         options: options,
       });
 
@@ -138,7 +124,20 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
         chartInstanceRef.current.destroy();
       }
     };
-  }, [data, options]);
+  }, []);
+
+  // Usa el chart.update() en vez de crear un nuevo chart con cada cambio de displayData o de las opciones.
+  useEffect(() => {
+    // Genera la nueva data (si es que displayData existe).
+    chartInstanceRef.current.data.datasets[0].data = displayData
+      ? Array.from(displayData).map((value, index) => ({
+          x: index,
+          y: value,
+        }))
+      : [];
+    chartInstanceRef.current.options = options;
+    chartInstanceRef.current.update();
+  }, [displayData, options]);
 
   return (
     <div>
