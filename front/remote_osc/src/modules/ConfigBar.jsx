@@ -10,30 +10,34 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  let jsonConfig = {}
+  let jsonConfig = {};
 
   const handleNewTimeDiv = (newTimeDiv) => {
     oscConfigService.getAll().then((configResponse) => {
-      jsonConfig = configResponse.data
-      oscConfigService.update(newTimeDiv, jsonConfig.ampDiv).then((response) => {
-        setTimeDivDisplay(response.data.timeDiv)
-      })
-    })
-  }
+      jsonConfig = configResponse.data;
+      oscConfigService
+        .update(newTimeDiv, jsonConfig.ampDiv)
+        .then((response) => {
+          setTimeDivDisplay(response.data.timeDiv);
+        });
+    });
+  };
+
   const handleNewAmpDiv = (newAmpDiv) => {
     oscConfigService.getAll().then((configResponse) => {
-      jsonConfig = configResponse.data
-      oscConfigService.update(jsonConfig.timeDiv, newAmpDiv).then((response) => {
-        setAmpDivDisplay(response.data.ampDiv)
-      })
-    })
-  }
-
+      jsonConfig = configResponse.data;
+      oscConfigService
+        .update(jsonConfig.timeDiv, newAmpDiv)
+        .then((response) => {
+          setAmpDivDisplay(response.data.ampDiv);
+        });
+    });
+  };
 
   return (
     <>
       <Stack direction="horizontal" gap={3} className="bg-dark p-2">
-        <div className="text-white">
+        <div className="text-white mx-4 mt-2">
           <h3>Remote Oscilloscope</h3>
         </div>
         <div className="p-2 ms-auto">
@@ -77,7 +81,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
                 <Button
                   variant="dark"
                   onClick={() => {
-                    handleNewTimeDiv(0.1)
+                    handleNewTimeDiv(0.1);
                   }}
                 >
                   0.1s
@@ -114,7 +118,10 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
                 {" "}
                 <Button
                   variant="dark"
-                  onClick={() => {handleNewAmpDiv(0.01*5)}}>
+                  onClick={() => {
+                    handleNewAmpDiv(0.01 * 5);
+                  }}
+                >
                   1mv
                 </Button>
               </div>
@@ -124,7 +131,9 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  {handleNewAmpDiv(0.1*5)}
+                  {
+                    handleNewAmpDiv(0.1 * 5);
+                  }
                 }}
               >
                 100mv
@@ -135,7 +144,9 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  {handleNewAmpDiv(5)}
+                  {
+                    handleNewAmpDiv(5);
+                  }
                 }}
               >
                 1v

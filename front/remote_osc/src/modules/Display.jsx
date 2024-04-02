@@ -1,25 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useEffect, useState } from "react";
-import "chartjs-plugin-style";
 import Plotly from "plotly.js-dist";
 import range from "lodash/range";
 import oscConfigService from "../services/oscConfigService";
 
-// eslint-disable-next-line react/prop-types
 const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
-
-
   const sampleFrec = 10000;
   const [displayData, setDisplayData] = useState([]);
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.005);
   const [ampDivDisplay, setAmpDivDisplay] = useState(5);
-  const xVals = range(0, 1, 1 / sampleFrec)
+  const xVals = range(0, 1, 1 / sampleFrec);
 
   useEffect(() => {
     oscConfigService.getAll().then((response) => {
-      setTimeDivDisplay(response.data.timeDiv)
-      setAmpDivDisplay(response.data.ampDiv)
-    })
+      setTimeDivDisplay(response.data.timeDiv);
+      setAmpDivDisplay(response.data.ampDiv);
+    });
   }, []);
 
   useEffect(() => {
@@ -34,21 +29,16 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
     setAmpDivDisplay(amplitudeDiv);
   }, [amplitudeDiv]);
 
-  let parsedData = [];
-
-
-  useEffect(() => {
-    parsedData = Array.from(displayData);
-  }, [displayData]);
-
   const plotRef = useRef(null);
 
   useEffect(() => {
+    const parsedData = Array.from(displayData);
+
     const trace = {
-      x: xVals, // Use index as x-value
+      x: xVals,
       y: parsedData,
       type: "scattergl",
-      mode: " lines",
+      mode: "lines",
       line: {
         color: "rgba(255, 206, 86, 1)",
         width: 2,
@@ -61,12 +51,12 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
         range: [0, 10 * timeDivDisplay],
         tick0: 0,
         dtick: timeDivDisplay,
-        gridcolor: 'lightgray',
+        gridcolor: "lightgray",
       },
       yaxis: {
         title: "Voltage (V)",
         range: [-ampDivDisplay, ampDivDisplay],
-        gridcolor: 'lightgray',
+        gridcolor: "lightgray",
         dtick: ampDivDisplay / 5,
       },
       margin: { t: 0 },
@@ -77,7 +67,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
     const config = { responsive: true, staticPlot: true };
 
     Plotly.react(plotRef.current, [trace], layout, config);
-  }, [parsedData]);
+  }, [displayData]);
 
   return (
     <div
