@@ -3,6 +3,7 @@ import { useRef, useEffect, useState } from "react";
 import "chartjs-plugin-style";
 import Plotly from "plotly.js-dist";
 import range from "lodash/range";
+import oscConfigService from "../services/oscConfigService";
 
 // eslint-disable-next-line react/prop-types
 const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
@@ -10,8 +11,16 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
 
   const sampleFrec = 10000;
   const [displayData, setDisplayData] = useState([]);
-  const [timeDivDisplay, setTimeDivDisplay] = useState(0.0001);
+  const [timeDivDisplay, setTimeDivDisplay] = useState(0.005);
   const [ampDivDisplay, setAmpDivDisplay] = useState(5);
+  const xVals = range(0, 1, 1 / sampleFrec)
+
+  useEffect(() => {
+    oscConfigService.getAll().then((response) => {
+      setTimeDivDisplay(response.data.timeDiv)
+      setAmpDivDisplay(response.data.ampDiv)
+    })
+  }, []);
 
   useEffect(() => {
     setDisplayData(lastSignalValue);
@@ -27,7 +36,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
 
   let parsedData = [];
 
-  const xVals = range(0, 1, 1 / sampleFrec)
+
   useEffect(() => {
     parsedData = Array.from(displayData);
   }, [displayData]);
@@ -53,7 +62,6 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv }) => {
         tick0: 0,
         dtick: timeDivDisplay,
         gridcolor: 'lightgray',
-
       },
       yaxis: {
         title: "Voltage (V)",

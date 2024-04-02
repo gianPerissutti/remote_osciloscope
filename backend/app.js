@@ -42,7 +42,7 @@ wss.on('connection', (ws) => {
     webSocketBuffer.set(buffer1seg.toarray())
     ws.send(webSocketBuffer);
 
-  }, 10)
+  }, 1000/60)
 
 
   ws.on('close', () => {

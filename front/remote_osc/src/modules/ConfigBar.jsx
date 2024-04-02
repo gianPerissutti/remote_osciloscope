@@ -4,11 +4,31 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import gearImage from "../resources/gear.png";
 import Stack from "react-bootstrap/Stack";
 import "../Disp.css";
+import oscConfigService from "../services/oscConfigService";
 
 function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  let jsonConfig = {}
+
+  const handleNewTimeDiv = (newTimeDiv) => {
+    oscConfigService.getAll().then((configResponse) => {
+      jsonConfig = configResponse.data
+      oscConfigService.update(newTimeDiv, jsonConfig.ampDiv).then((response) => {
+        setTimeDivDisplay(response.data.timeDiv)
+      })
+    })
+  }
+  const handleNewAmpDiv = (newAmpDiv) => {
+    oscConfigService.getAll().then((configResponse) => {
+      jsonConfig = configResponse.data
+      oscConfigService.update(jsonConfig.timeDiv, newAmpDiv).then((response) => {
+        setAmpDivDisplay(response.data.ampDiv)
+      })
+    })
+  }
+
 
   return (
     <>
@@ -57,7 +77,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
                 <Button
                   variant="dark"
                   onClick={() => {
-                    setTimeDivDisplay(0.1);
+                    handleNewTimeDiv(0.1)
                   }}
                 >
                   0.1s
@@ -69,7 +89,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  setTimeDivDisplay(0.05);
+                  handleNewTimeDiv(0.05);
                 }}
               >
                 50ms
@@ -80,7 +100,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  setTimeDivDisplay(0.005);
+                  handleNewTimeDiv(0.005);
                 }}
               >
                 500us
@@ -94,10 +114,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
                 {" "}
                 <Button
                   variant="dark"
-                  onClick={() => {
-                    setAmpDivDisplay(0.01 * 5);
-                  }}
-                >
+                  onClick={() => {handleNewAmpDiv(0.01*5)}}>
                   1mv
                 </Button>
               </div>
@@ -107,7 +124,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  setAmpDivDisplay(0.1 * 5);
+                  {handleNewAmpDiv(0.1*5)}
                 }}
               >
                 100mv
@@ -118,7 +135,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
               <Button
                 variant="dark"
                 onClick={() => {
-                  setAmpDivDisplay(1 * 5);
+                  {handleNewAmpDiv(5)}
                 }}
               >
                 1v
