@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import WebSocketComponent from "./services/websocket";
 import { useState, useCallback } from "react";
 import ConfigBar from "./modules/ConfigBar.jsx";
-import OscConfigService from "./services/osc_config";
 
 const App = () => {
   const [signalValue, setSignalValue] = useState(0);

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 const WebSocketComponent = ({ setReturnedValue }) => {
   const { lastMessage, readyState, getWebSocket } = useWebSocket(
-    "ws://localhost:3002",
+    "ws://192.168.0.73:3002",
     {
       onOpen: () => console.log("opened"),
       //Will attempt to reconnect on all close events, such as server shutting down

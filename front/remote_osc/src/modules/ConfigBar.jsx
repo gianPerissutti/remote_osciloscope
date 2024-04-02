@@ -4,9 +4,9 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import gearImage from "../resources/gear.png";
 import Stack from "react-bootstrap/Stack";
 import "../Disp.css";
+
 function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -14,7 +14,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay }) {
     <>
       <Stack direction="horizontal" gap={3} className="bg-dark p-2">
         <div className="text-white">
-          <h3>Osciloscopio Web</h3>
+          <h3>Remote Oscilloscope</h3>
         </div>
         <div className="p-2 ms-auto">
           {" "}

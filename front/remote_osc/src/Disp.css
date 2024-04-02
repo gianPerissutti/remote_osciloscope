@@ -12,3 +12,6 @@
     justify-content: flex-end;
 }
 
+body {
+    background-color: black !important;
+}
