@@ -12,7 +12,7 @@ const middleware = require('./utils/middleware');
 
 app.use(cors());
 app.use(express.json());
-app.use('/osc_config',OscConfigRouter)
+app.use('/osc_config', OscConfigRouter)
 
 
 const server = http.createServer(app); // Create HTTP server
@@ -21,30 +21,29 @@ const wss = new WebSocket.Server({ server }); // Create WebSocket server
 const frequency = 2; // Frequency in Hz
 
 const sampleFrec = 10000
- 
 
-const buffer1seg = new CircularBuffer(sampleFrec*10)
 
-for(let i = 0; i<sampleFrec*10;i++)
-{
-    buffer1seg.enq(1);
+const buffer1seg = new CircularBuffer(sampleFrec * 10)
+
+for (let i = 0; i < sampleFrec * 10; i++) {
+  buffer1seg.enq(1);
 }
-  
+
 let webSocketBuffer = new Float32Array(buffer1seg.toarray())
 let randomVal = 0
 wss.on('connection', (ws) => {
   console.log('Client connected');
-  setInterval(()=>{
-    randomVal = Math.random().toFixed(3)*10-5
+  setInterval(() => {
+    randomVal = Math.random().toFixed(3) * 10 - 5
     buffer1seg.enq(randomVal);
     buffer1seg.enq(randomVal);
     buffer1seg.enq(randomVal);
     buffer1seg.enq(randomVal);
     webSocketBuffer.set(buffer1seg.toarray())
-   ws.send(webSocketBuffer);
-  
-},10)
- 
+    ws.send(webSocketBuffer);
+
+  }, 1000/60)
+
 
   ws.on('close', () => {
     console.log('Client disconnected');
