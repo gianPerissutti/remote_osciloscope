@@ -5,12 +5,35 @@ import gearImage from "../resources/gear.png";
 import Stack from "react-bootstrap/Stack";
 import "../Disp.css";
 import oscConfigService from "../services/oscConfigService";
+import { FaPlay } from "react-icons/fa";
+import { AiOutlinePause } from "react-icons/ai";
+
+const PauseIcon = ({ pauseIcon }) => {
+  if (pauseIcon) {
+    return (
+      <>
+
+        <FaPlay />
+      </>
+    )
+  }
+  else {
+    return (
+      <>
+        <AiOutlinePause />
+      </>
+    )
+  }
+}
 
 function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [pauseIcon, setPauseIcon] = useState(false)
+
   let jsonConfig = {}
+
 
   const handleNewTimeDiv = (newTimeDiv) => {
     oscConfigService.getAll().then((configResponse) => {
@@ -31,6 +54,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
 
   const handlePause = () => {
     setPause(prevPause => !prevPause);
+    setPauseIcon(prevPauseIcon => !prevPauseIcon)
   }
   return (
     <>
@@ -146,7 +170,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
           </Stack>
           <h4>Pause</h4>
           <Button variant="dark" onClick={handlePause}>
-            Pause
+            <PauseIcon pauseIcon={pauseIcon} />
           </Button>
         </Offcanvas.Body>
       </Offcanvas>

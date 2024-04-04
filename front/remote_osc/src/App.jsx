@@ -5,6 +5,7 @@ import WebSocketComponent from "./services/websocket";
 import { useState, useCallback } from "react";
 import ConfigBar from "./modules/ConfigBar.jsx";
 import Measurements from "./modules/Measurements.jsx";
+
 const App = () => {
   const [signalValue, setSignalValue] = useState(0);
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.001);
@@ -28,7 +29,10 @@ const App = () => {
         />
       </div>
       <div>
-        <WebSocketComponent setReturnedValue={memoizedSetSignalValue} />
+        <WebSocketComponent 
+        setReturnedValue={memoizedSetSignalValue} 
+        pause = {pause}
+        />
         <div className="display">
           <Display
             lastSignalValue={signalValue}

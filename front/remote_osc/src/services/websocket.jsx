@@ -1,9 +1,9 @@
 import useWebSocket from "react-use-websocket";
 import { useEffect } from "react";
 
-const WebSocketComponent = ({ setReturnedValue }) => {
+const WebSocketComponent = ({ setReturnedValue ,pause}) => {
   const { lastMessage, readyState, getWebSocket } = useWebSocket(
-    'ws://192.168.0.179:3002',
+    'ws://localhost:3002',
     {
       onOpen: () => console.log("opened"),
       //Will attempt to reconnect on all close events, such as server shutting down
@@ -17,7 +17,10 @@ const WebSocketComponent = ({ setReturnedValue }) => {
       getWebSocket().binaryType = "arraybuffer";
       getWebSocket().onmessage = (event) => {
         let bufferArrived = new Float32Array(event.data);
+        if(!pause)
+        {
         setReturnedValue(bufferArrived);
+        }
       };
     }
   }, [lastMessage]);

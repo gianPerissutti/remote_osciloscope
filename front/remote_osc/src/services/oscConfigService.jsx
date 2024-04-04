@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const baseUrl = "http://192.168.0.179:3002/osc_config";
+const baseUrl = "http://localhost:3002/osc_config";
 
 
 const configJson = {
-  timeDiv: 0.001,
+  timeDiv: 0.005,
   amplitudeDiv: 1
 }
 

@@ -7,10 +7,8 @@ import oscConfigService from "../services/oscConfigService";
 
 // eslint-disable-next-line react/prop-types
 const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
-
-
   const sampleFrec = 10000;
-  const [displayData, setDisplayData] = useState([]);
+
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.005);
   const [ampDivDisplay, setAmpDivDisplay] = useState(5);
   const xVals = range(0, 1, 1 / sampleFrec)
@@ -22,10 +20,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
     })
   }, []);
 
-  useEffect(() => {
-    
-    setDisplayData(lastSignalValue);
-  }, [lastSignalValue]);
+
 
   useEffect(() => {
     setTimeDivDisplay(timeDiv);
@@ -38,18 +33,22 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
   let parsedData = [];
 
 
+  const displayDataRef = useRef([]);
+
   useEffect(() => {
-   
-      parsedData = Array.from(displayData);
-    
-  }, [displayData]);
+    if (!pause) {
+      displayDataRef.current = Array.from(lastSignalValue);
+    }
+  }, [lastSignalValue])
+
+
 
   const plotRef = useRef(null);
 
   useEffect(() => {
     const trace = {
       x: xVals, // Use index as x-value
-      y: parsedData,
+      y: displayDataRef.current,
       type: "scattergl",
       mode: " lines",
       line: {
@@ -77,10 +76,12 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
       plot_bgcolor: "black",
     };
 
-    const config = { responsive: true, staticPlot: true };
+    const config = { responsive: true, staticPlot: !pause };
 
     Plotly.react(plotRef.current, [trace], layout, config);
-  }, [parsedData,pause]);
+
+
+  }, [parsedData]);
 
   return (
     <div
