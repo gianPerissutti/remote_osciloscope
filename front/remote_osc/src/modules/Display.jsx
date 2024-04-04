@@ -11,16 +11,14 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
 
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.005);
   const [ampDivDisplay, setAmpDivDisplay] = useState(5);
-  const xVals = range(0, 1, 1 / sampleFrec)
+  const xVals = range(0, 1, 1 / sampleFrec);
 
   useEffect(() => {
     oscConfigService.getAll().then((response) => {
-      setTimeDivDisplay(response.data.timeDiv)
-      setAmpDivDisplay(response.data.ampDiv)
-    })
+      setTimeDivDisplay(response.data.timeDiv);
+      setAmpDivDisplay(response.data.ampDiv);
+    });
   }, []);
-
-
 
   useEffect(() => {
     setTimeDivDisplay(timeDiv);
@@ -30,18 +28,13 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
     setAmpDivDisplay(amplitudeDiv);
   }, [amplitudeDiv]);
 
-  let parsedData = [];
-
-
   const displayDataRef = useRef([]);
 
   useEffect(() => {
     if (!pause) {
       displayDataRef.current = Array.from(lastSignalValue);
     }
-  }, [lastSignalValue])
-
-
+  }, [lastSignalValue]);
 
   const plotRef = useRef(null);
 
@@ -63,12 +56,12 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
         range: [0, 10 * timeDivDisplay],
         tick0: 0,
         dtick: timeDivDisplay,
-        gridcolor: 'lightgray',
+        gridcolor: "lightgray",
       },
       yaxis: {
         title: "Voltage (V)",
         range: [-ampDivDisplay, ampDivDisplay],
-        gridcolor: 'lightgray',
+        gridcolor: "lightgray",
         dtick: ampDivDisplay / 5,
       },
       margin: { t: 0 },
@@ -79,9 +72,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
     const config = { responsive: true, staticPlot: !pause };
 
     Plotly.react(plotRef.current, [trace], layout, config);
-
-
-  }, [parsedData]);
+  }, [displayDataRef.current]);
 
   return (
     <div
