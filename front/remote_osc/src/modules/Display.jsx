@@ -1,11 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useEffect, useState } from "react";
 import "chartjs-plugin-style";
 import Plotly from "plotly.js-dist";
 import range from "lodash/range";
 import oscConfigService from "../services/oscConfigService";
 
-// eslint-disable-next-line react/prop-types
 const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
   const sampleFrec = 10000;
 
@@ -72,7 +70,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
     const config = { responsive: true, staticPlot: !pause };
 
     Plotly.react(plotRef.current, [trace], layout, config);
-  }, [displayDataRef.current]);
+  }, [displayDataRef.current, ampDivDisplay, timeDivDisplay]);
 
   return (
     <div
