@@ -6,7 +6,7 @@ const http = require('http'); // Import the HTTP module
 const WebSocket = require('ws'); // Import WebSocket library
 const CircularBuffer = require('circular-buffer')
 const OscConfigRouter = require('./controllers/oscConfig');
-const {OscFunctionsRouter, savedFunctions}= require('./controllers/oscFunctions');
+const { OscFunctionsRouter, savedFunctions } = require('./controllers/oscFunctions');
 
 const middleware = require('./utils/middleware');
 
@@ -24,27 +24,34 @@ const sampleFrec = 10000
 
 
 
-const buffer1seg = new CircularBuffer(sampleFrec * 10)
+const buffer1 = new CircularBuffer(sampleFrec * 10)
+const buffer2 = new CircularBuffer(sampleFrec * 10)
 
 for (let i = 0; i < sampleFrec * 10; i++) {
-  buffer1seg.enq(1);
+  buffer1.enq(1);
+  buffer2.enq(1);
 }
 
 
-let webSocketBuffer = new Float32Array(buffer1seg.toarray())
+let webSocketBuffer = new Float32Array(buffer1.toarray().concat(buffer2.toarray()))
 let randomVal = 0
 wss.on('connection', (ws) => {
   console.log('Client connected');
   setInterval(() => {
-    randomVal = (Math.random().toFixed(3) * 10 - 5)+ savedFunctions.offset
-    buffer1seg.enq(randomVal);
-    buffer1seg.enq(randomVal);
-    buffer1seg.enq(randomVal);
-    buffer1seg.enq(randomVal);
-    webSocketBuffer.set(buffer1seg.toarray())
+    randomVal = (Math.random().toFixed(3) * 3 - 5) + savedFunctions.offset
+    buffer1.enq(randomVal);
+    buffer1.enq(randomVal);
+    buffer1.enq(randomVal);
+    buffer1.enq(randomVal);
+    randomVal = (Math.random().toFixed(3) * 3) + savedFunctions.offset
+    buffer2.enq(randomVal);
+    buffer2.enq(randomVal);
+    buffer2.enq(randomVal);
+    buffer2.enq(randomVal);
+    webSocketBuffer.set(buffer1.toarray().concat(buffer2.toarray()))
     ws.send(webSocketBuffer);
 
-  }, 1000/60)
+  }, 1000 / 60)
 
 
   ws.on('close', () => {

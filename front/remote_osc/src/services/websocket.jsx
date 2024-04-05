@@ -1,7 +1,7 @@
 import useWebSocket from "react-use-websocket";
 import { useEffect } from "react";
 
-const WebSocketComponent = ({ setReturnedValue ,pause}) => {
+const WebSocketComponent = ({ setReturnedValue1,setReturnedValue2 ,pause}) => {
   const { lastMessage, readyState, getWebSocket } = useWebSocket(
     'ws://localhost:3002',
     {
@@ -19,7 +19,9 @@ const WebSocketComponent = ({ setReturnedValue ,pause}) => {
         let bufferArrived = new Float32Array(event.data);
         if(!pause)
         {
-        setReturnedValue(bufferArrived);
+        setReturnedValue1(bufferArrived.slice(0,bufferArrived.length/2));
+        setReturnedValue2(bufferArrived.slice(bufferArrived.length/2,bufferArrived.length));
+
         }
       };
     }

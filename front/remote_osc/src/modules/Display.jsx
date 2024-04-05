@@ -4,7 +4,7 @@ import Plotly from "plotly.js-dist";
 import range from "lodash/range";
 import oscConfigService from "../services/oscConfigService";
 
-const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
+const Display = ({ lastSignalValueChannel1, lastSignalValueChannel2, timeDiv, amplitudeDiv, pause }) => {
   const sampleFrec = 10000;
 
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.005);
@@ -26,20 +26,24 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
     setAmpDivDisplay(amplitudeDiv);
   }, [amplitudeDiv]);
 
-  const displayDataRef = useRef([]);
+  const displayDataRefChannel1 = useRef([]);
+  const displayDataRefChannel2 = useRef([]);
 
   useEffect(() => {
     if (!pause) {
-      displayDataRef.current = Array.from(lastSignalValue);
+      displayDataRefChannel1.current = Array.from(lastSignalValueChannel1);
+      displayDataRefChannel2.current = Array.from(lastSignalValueChannel2);
     }
-  }, [lastSignalValue]);
+  }, [lastSignalValueChannel1, lastSignalValueChannel2]);
+
 
   const plotRef = useRef(null);
 
   useEffect(() => {
-    const trace = {
+    const Channel1 = {
+      name: "Channel 1",
       x: xVals, // Use index as x-value
-      y: displayDataRef.current,
+      y: displayDataRefChannel1.current,
       type: "scattergl",
       mode: " lines",
       line: {
@@ -47,7 +51,17 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
         width: 2,
       },
     };
-
+    const Channel2 = {
+      name: "Channel 2",
+      x: xVals, // Use index as x-value
+      y: displayDataRefChannel2.current,
+      type: "scattergl",
+      mode: " lines",
+      line: {
+        color: "rgba(255, 50, 50, 1)",
+        width: 2,
+      },
+    };
     const layout = {
       xaxis: {
         title: "",
@@ -65,12 +79,31 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
       margin: { t: 0 },
       paper_bgcolor: "black",
       plot_bgcolor: "black",
-    };
+      legend: {
+        x: 0,
+        y: 1,
+        traceorder: 'normal',
+        font: {
+          family: 'sans-serif',
+          size: 12,
+          color: '#000'
+        }
+      },
+      legend: {
 
+        traceorder: 'normal',
+
+        font: {
+          family: 'sans-serif',
+          size: 12,
+          color: '#FFF'
+        }
+      }
+    }
     const config = { responsive: true, staticPlot: !pause, displaylogo: false };
 
-    Plotly.react(plotRef.current, [trace], layout, config);
-  }, [displayDataRef.current, ampDivDisplay, timeDivDisplay]);
+    Plotly.react(plotRef.current, [Channel1, Channel2], layout, config);
+  }, [displayDataRefChannel1.current, ampDivDisplay, timeDivDisplay, displayDataRefChannel2.current]);
 
   return (
     <div

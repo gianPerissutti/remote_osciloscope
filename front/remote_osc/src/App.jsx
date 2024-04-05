@@ -9,18 +9,23 @@ import Measurements from "./modules/Measurements.jsx";
 
 
 const App = () => {
-  const [signalValue, setSignalValue] = useState(0);
+  const [signalValueChannel1, setSignalValueChannel1] = useState(0);
+  const [signalValueChannel2, setSignalValueChannel2] = useState(0);
   const [timeDivDisplay, setTimeDivDisplay] = useState(0.001);
   const [ampDivDisplay, setAmpDivDisplay] = useState(5);
   const [pause, setPause] = useState(false);
-  const [value, setValue] = useState(0);
+
+
   // Crear este callback hace que no aparezca un mensaje de error en la consola
   // diciendo que setReturnedValue cambia demasiado en websocket.jsx
-  const memoizedSetSignalValue = useCallback(
-    (value) => setSignalValue(value),
+  const memoizedSetSignalValueChannel1 = useCallback(
+    (value) => setSignalValueChannel1(value),
     []
   );
-
+  const memoizedSetSignalValueChannel2 = useCallback(
+    (value) => setSignalValueChannel2(value),
+    []
+  );
   return (
     <div>
       <div>
@@ -32,12 +37,14 @@ const App = () => {
       </div>
       <div>
         <WebSocketComponent
-          setReturnedValue={memoizedSetSignalValue}
+          setReturnedValue1={memoizedSetSignalValueChannel1}
+          setReturnedValue2={memoizedSetSignalValueChannel2}
           pause={pause}
         />
         <div className="display">
           <Display
-            lastSignalValue={signalValue}
+            lastSignalValueChannel1={signalValueChannel1}
+            lastSignalValueChannel2={signalValueChannel2}
             timeDiv={timeDivDisplay}
             amplitudeDiv={ampDivDisplay}
             pause={pause}
