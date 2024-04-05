@@ -5,6 +5,8 @@
 
 .display {
     background-color: black;
+
+
 }
 
 .config_button {
@@ -14,4 +16,14 @@
 
 body {
     background-color: black !important;
+}
+
+.measurements {
+    position: relative;
+    top: -50px;
+}
+
+.custom-slider {
+
+    transform: translateY(-50%) rotate(90deg);
 }

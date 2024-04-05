@@ -67,7 +67,7 @@ const Display = ({ lastSignalValue, timeDiv, amplitudeDiv, pause }) => {
       plot_bgcolor: "black",
     };
 
-    const config = { responsive: true, staticPlot: !pause };
+    const config = { responsive: true, staticPlot: !pause, displaylogo: false };
 
     Plotly.react(plotRef.current, [trace], layout, config);
   }, [displayDataRef.current, ampDivDisplay, timeDivDisplay]);

@@ -4,9 +4,12 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import gearImage from "../resources/gear.png";
 import Stack from "react-bootstrap/Stack";
 import "../Disp.css";
-import oscConfigService from "../services/oscConfigService";
+import oscConfigService from "../services/oscConfigService"
+import oscFunctionService from "../services/oscFunctionService"
 import { FaPlay } from "react-icons/fa";
 import { AiOutlinePause } from "react-icons/ai";
+
+
 
 const PauseIcon = ({ pauseIcon }) => {
   if (pauseIcon) {
@@ -34,7 +37,6 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
 
   let jsonConfig = {}
 
-
   const handleNewTimeDiv = (newTimeDiv) => {
     oscConfigService.getAll().then((configResponse) => {
       jsonConfig = configResponse.data
@@ -51,6 +53,14 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
       })
     })
   }
+  const handleNewOffset = (newOffset) => {
+    oscFunctionService.getAll().then((funcResponse) => {
+      const prevOffset = funcResponse.data.offset
+      oscFunctionService.update(newOffset + prevOffset).then((response) => {
+        console.log(response.data)
+      })
+    })
+  }
 
   const handlePause = () => {
     setPause(prevPause => !prevPause);
@@ -58,18 +68,19 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
   }
   return (
     <>
-      <Stack direction="horizontal" gap={3} className="bg-dark p-2">
-        <div className="text-white">
-          <h3>Remote Oscilloscope</h3>
-        </div>
-        <div className="p-2 ms-auto">
-          {" "}
-          <Button variant="dark" onClick={handleShow}>
-            <img src={gearImage} alt="gear" width="30" height="30" />
-          </Button>
-        </div>
-      </Stack>
-
+      <div style={{ marginBottom: '20px' }}>
+        <Stack direction="horizontal" gap={3} className="bg-dark p-2">
+          <div className="text-white">
+            <h3>Remote Oscilloscope</h3>
+          </div>
+          <div className="p-2 ms-auto">
+            {" "}
+            <Button variant="dark" onClick={handleShow}>
+              <img src={gearImage} alt="gear" width="30" height="30" />
+            </Button>
+          </div>
+        </Stack>
+      </div>
       <Offcanvas
         show={show}
         onHide={handleClose}
@@ -121,7 +132,7 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
                 50ms
               </Button>
             </div>
-            <div className="p-2 ms-auto">
+            <div className="p-2</Stack> ms-auto">
               {" "}
               <Button
                 variant="dark"
@@ -168,10 +179,24 @@ function ConfigBar({ setTimeDivDisplay, setAmpDivDisplay, setPause }) {
               </Button>
             </div>
           </Stack>
-          <h4>Pause</h4>
-          <Button variant="dark" onClick={handlePause}>
-            <PauseIcon pauseIcon={pauseIcon} />
-          </Button>
+          <Stack direction="horizontal" gap={2}>
+            <h4>Pause</h4>
+            <h4>Offset</h4>
+          </Stack>
+          <Stack direction="horizontal" gap={3}>
+            <Button variant="dark" onClick={handlePause}>
+              <PauseIcon pauseIcon={pauseIcon} />
+            </Button>
+            <Stack direction="vertical" gap={3}>
+
+              <Button variant="dark" onClick={() => { handleNewOffset(0.5) }}>
+                arriba
+              </Button>
+              <Button variant="dark" onClick={() => { handleNewOffset(-0.5) }}>
+                abajo
+              </Button>
+            </Stack>
+          </Stack>
         </Offcanvas.Body>
       </Offcanvas>
     </>
