@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": "/home/gian/Documents/UTN/Proyecto final/remote_osciloscope/esp32/esp32_web/esp32_webOsc/.pio/libdeps/esp32-s3-devkitc-1/ArduinoJson",
+    "files.associations": {
+        "*.tcc": "cpp"
+    }
+}

@@ -34,11 +34,26 @@ for (let i = 0; i < sampleFrec * 10; i++) {
 
 
 let webSocketBuffer = new Float32Array(buffer1.toarray().concat(buffer2.toarray()))
+console.log(webSocketBuffer.length)
 let randomVal = 0
+
+wss.addListener('connection', (ws) => {
+ 
+  ws.on('message', (message) => {
+    console.log(message.buffer)
+    
+   webSocketBuffer.set(new Float32Array(message.buffer))
+
+    console.log('Received Float32 value:', webSocketBuffer);
+  });
+
+
+})
+
 wss.on('connection', (ws) => {
   console.log('Client connected');
   setInterval(() => {
-    randomVal = (Math.random().toFixed(3) * 3 - 5) + savedFunctions.offset
+    /*randomVal = (Math.random().toFixed(3) * 3 - 5) + savedFunctions.offset
     buffer1.enq(randomVal);
     buffer1.enq(randomVal);
     buffer1.enq(randomVal);
@@ -48,10 +63,9 @@ wss.on('connection', (ws) => {
     buffer2.enq(randomVal);
     buffer2.enq(randomVal);
     buffer2.enq(randomVal);
-    webSocketBuffer.set(buffer1.toarray().concat(buffer2.toarray()))
+    webSocketBuffer.set(buffer1.toarray().concat(buffer2.toarray()))*/
     ws.send(webSocketBuffer);
-
-  }, 1000 / 60)
+  }, 1000)
 
 
   ws.on('close', () => {
